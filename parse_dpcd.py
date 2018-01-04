@@ -112,7 +112,7 @@ def reg_addr_str(name, addr):
     return "{n:>{w}} {a:04x}".format(w=MAX_LEN_REG_NAME, n=name, a=addr)
 
 def print_reg(addr, val):
-    """Find a DPCD register using the DPCD_REGS map and print it's value."""
+    """Find a DPCD register in the DPCD_REGS map and print its value."""
     try:
         reg = DPCD_REGS[addr]
     except KeyError:
