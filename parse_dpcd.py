@@ -64,22 +64,22 @@ DPCD_REGS = {
 }
 
 def reg_addr_str(name, addr):
-    return "{:>20} {:04x}".format(name, addr)
+    return "{:>25} {:04x}".format(name, addr)
 
 def print_reg(addr, val):
     try:
         reg = DPCD_REGS[addr]
     except KeyError:
-        print("{:>25}: {:02x}".format(reg_addr_str("", addr), val))
+        print("{}: {:02x}".format(reg_addr_str("", addr), val))
         return
 
     if reg.dpcd_data:
         data = ["{}: {}".format(data.name, (val >> data.shift) & data.mask)
                 for data in reg.dpcd_data]
-        print("{:>25}: {:02x}, {}".format(reg_addr_str(reg.name, addr), val,
-                                          ", ".join(data)))
+        print("{}: {:02x}, {}".format(reg_addr_str(reg.name, addr), val,
+                                      ", ".join(data)))
     else:
-        print("{:>25}: {:02x}".format(reg_addr_str(reg.name, addr), val))
+        print("{}: {:02x}".format(reg_addr_str(reg.name, addr), val))
 
 def parse_dpcd_line(line):
     logging.debug("parsing %s", line)
