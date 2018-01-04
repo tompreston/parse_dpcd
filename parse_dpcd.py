@@ -105,10 +105,11 @@ DPCD_REGS = {
                     DPCDData("framing_change_enable", 0x1, 1),
                     DPCDData("alternate_scramber_reset_enable", 0x1, 0)]),
 }
+MAX_LEN_REG_NAME = max(len(DPCD_REGS[addr].name) for addr in DPCD_REGS)
 
 def reg_addr_str(name, addr):
-    """Return a 30 character register name + address, right aligned."""
-    return "{:>25} {:04x}".format(name, addr)
+    """Return a register name + address, right aligned."""
+    return "{n:>{w}} {a:04x}".format(w=MAX_LEN_REG_NAME, n=name, a=addr)
 
 def print_reg(addr, val):
     """Find a DPCD register using the DPCD_REGS map and print it's value."""
