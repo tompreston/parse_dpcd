@@ -76,15 +76,15 @@ def print_reg(addr, val):
     else:
         print("{}: {:02x}".format(reg_addr_str(reg.name, addr), val))
 
-def parse_dpcd_line(line):
+def parse_dpcd_line(dpcd_line):
     """Parse a single DPCD line. Expected input:
 
         0000: 11 0a 84 01 01 00 01 80 02 00 00 00 00 00 00
 
     """
-    logging.debug("parsing %s", line)
+    logging.debug("parsing %s", dpcd_line)
 
-    addr_str, regs_str = (s.strip() for s in line.split(":"))
+    addr_str, regs_str = (s.strip() for s in dpcd_line.split(":"))
     addr_base = int(addr_str, 16)
     reg_vals = list(map(lambda h: int(h, 16), regs_str.split(" ")))
 
