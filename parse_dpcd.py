@@ -7,31 +7,24 @@ Usage:
         cat /sys/kernel/debug/dri/0/DP-1/i915_dpcd | python3 parse_dpcd.py
 
 """
+import collections
 import fileinput
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-class DPCDReg():
-    def __init__(self, name, dpcd_data=None):
-        self.name = name
-        self.dpcd_data = dpcd_data
-
-class DPCDData():
-    def __init__(self, name, mask, shift):
-        self.name = name
-        self.mask = mask
-        self.shift = shift
+DPCDReg = collections.namedtuple("DPCDReg", ["name", "dpcd_data"])
+DPCDData = collections.namedtuple("DPCDData", ["name", "mask", "shift"])
 
 DPCD_REGS = {
     0x000: DPCDReg("DP_DPCD_REV",
                    [DPCDData("major", 0xf, 4), DPCDData("minor", 0xf, 0)]),
-    0x001: DPCDReg("MAX_LINK_RATE"),
+    0x001: DPCDReg("MAX_LINK_RATE", None),
     0x002: DPCDReg("MAX_LANE_COUNT",
                    [DPCDData("enhanced frame cap", 0x1, 7),
                     DPCDData("TPS3 supported", 0x1, 6),
                     DPCDData("max lanes", 0x1f, 0)]),
-    0x003: DPCDReg("MAX_DOWNSPREAD"),
+    0x003: DPCDReg("MAX_DOWNSPREAD", None),
     0x004: DPCDReg("NORP & DP_PWR_VOLTAGE_CAP",
                    [DPCDData("18v_dp_pwr_cap", 0x1, 7),
                     DPCDData("12v_dp_pwr_cap", 0x1, 6),
@@ -56,11 +49,11 @@ DPCD_REGS = {
                     DPCDData("local_edid_present", 0x1, 1)]),
     0x00b: DPCDReg("RECEIVE_PORT1_CAP_1",
                    [DPCDData("buffer_size", 0xff, 0)]),
-    0x00c: DPCDReg("I2C_SPEED_CONTROL"),
+    0x00c: DPCDReg("I2C_SPEED_CONTROL", None),
     0x00d: DPCDReg("eDP_CONFIGURATION_CAP",
                    [DPCDData("framing_change_capable", 0x1, 1),
                     DPCDData("alternate_scrambler_reset_capable", 0x1, 0)]),
-    0x00e: DPCDReg("TRAINING_AUX_RD_INTERVAL"),
+    0x00e: DPCDReg("TRAINING_AUX_RD_INTERVAL", None),
 }
 
 def reg_addr_str(name, addr):
