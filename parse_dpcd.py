@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import collections
 import fileinput
+import argparse
 import logging
 
 #logging.basicConfig(level=logging.DEBUG)
@@ -152,7 +153,7 @@ def reg_addr_str(name, addr):
     """Return a register name + address, right aligned."""
     return "{n:>{w}} {a:04x}".format(w=MAX_LEN_REG_NAME, n=name, a=addr)
 
-def print_reg(addr, val):
+def print_reg(addr, val, show_data=False):
     """Find a DPCD register in the DPCD_REGS map and print its value."""
     try:
         reg = DPCD_REGS[addr]
@@ -160,15 +161,17 @@ def print_reg(addr, val):
         print("{}: {:02x}".format(reg_addr_str("", addr), val))
         return
 
-    if reg.dpcd_data:
+    if show_data and reg.dpcd_data:
         data = ["{}: {}".format(data.name, (val >> data.shift) & data.mask)
                 for data in reg.dpcd_data]
         print("{}: {:02x}, {}".format(reg_addr_str(reg.name, addr), val,
-                                      ", ".join(data)))
+                                      data[0]))
+        for d in data[1:]:
+            print("{e:{w}} {d}".format(e="", w=MAX_LEN_REG_NAME+10, d=d))
     else:
         print("{}: {:02x}".format(reg_addr_str(reg.name, addr), val))
 
-def parse_dpcd_line(dpcd_line):
+def parse_dpcd_line(dpcd_line, show_data=False):
     """Parse a single DPCD line. Expected input:
 
         0000: 11 0a 84 01 01 00 01 80 02 00 00 00 00 00 00
@@ -181,10 +184,16 @@ def parse_dpcd_line(dpcd_line):
     reg_vals = list(map(lambda h: int(h, 16), regs_str.split(" ")))
 
     for i, val in enumerate(reg_vals):
-        print_reg(addr_base + i, val)
+        print_reg(addr_base + i, val, show_data)
 
 if __name__ == "__main__":
-    for line in fileinput.input():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--data", help="show data", action="store_true")
+    parser.add_argument('files', metavar='FILE', nargs='*',
+                        help='files to read, if empty, stdin is used')
+    args = parser.parse_args()
+
+    for line in fileinput.input(files=args.files):
         line = line.strip()
         if line:
-            parse_dpcd_line(line)
+            parse_dpcd_line(line, show_data=args.data)
