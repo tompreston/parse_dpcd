@@ -57,9 +57,11 @@ DPCD_REGS = {
 }
 
 def reg_addr_str(name, addr):
+    """Return a 30 character register name + address, right aligned."""
     return "{:>25} {:04x}".format(name, addr)
 
 def print_reg(addr, val):
+    """Find a DPCD register using the DPCD_REGS map and print it's value."""
     try:
         reg = DPCD_REGS[addr]
     except KeyError:
@@ -75,6 +77,11 @@ def print_reg(addr, val):
         print("{}: {:02x}".format(reg_addr_str(reg.name, addr), val))
 
 def parse_dpcd_line(line):
+    """Parse a single DPCD line. Expected input:
+
+        0000: 11 0a 84 01 01 00 01 80 02 00 00 00 00 00 00
+
+    """
     logging.debug("parsing %s", line)
 
     addr_str, regs_str = (s.strip() for s in line.split(":"))
