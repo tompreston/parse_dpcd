@@ -40,9 +40,10 @@ def print_reg(addr, val):
         return
 
     if reg.dpcd_data:
-        for data in reg.dpcd_data:
-            print("{:>25}: {:x} {}".format(reg_addr_str(reg.name, addr), val,
-                                           data.name))
+        data = ["{}: {}".format(data.name, (val >> data.shift) & data.mask)
+                for data in reg.dpcd_data]
+        print("{:>25}: {:02x}, {}".format(reg_addr_str(reg.name, addr), val,
+                                          ", ".join(data)))
     else:
         print("{:>25}: {:02x}".format(reg_addr_str(reg.name, addr), val))
 
