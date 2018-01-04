@@ -11,7 +11,7 @@ import collections
 import fileinput
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 DPCDReg = collections.namedtuple("DPCDReg", ["name", "dpcd_data"])
 DPCDData = collections.namedtuple("DPCDData", ["name", "mask", "shift"])
