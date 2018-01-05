@@ -1,10 +1,7 @@
 """
 parse_dpcd.py - Parses DPCD data.
-Usage:
-
-    cat /sys/kernel/debug/dri/0/DP-1/i915_dpcd | python3 parse_dpcd.py
-
-Copyright (C) 2017 Thomas Preston <thomasmarkpreston@gmail.com>
+Copyright (C) 2017 Codethink Ltd.
+Author: Thomas Preston <thomasmarkpreston@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
