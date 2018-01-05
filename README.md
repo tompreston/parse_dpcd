@@ -1,6 +1,8 @@
 # DPCD parser
-Parse DisplayPort CD
+Parse DisplayPort Configuration Data
 
-start here:
-include/drm/drm_dp_helper.h:66:#define
+Example usage:
+
+    cat /sys/kernel/debug/dri/0/DP-1/i915_dpcd | python3 parse_dpcd.py --data
+    python3 parse_dpcd.py --help
 
